@@ -8,6 +8,7 @@ import song
 
 vol_regex=re.compile('mb vol ')
 song_regex=re.compile('mb ')
+stfu_regex=re.compile('mb stfu')
 
 class MBProtocol(basic.LineReceiver):
     def connectionMade(self):
@@ -26,6 +27,13 @@ class MBProtocol(basic.LineReceiver):
             volume.setVolume(vol)
             #self.factory.commandq.put([0,vol])
             return
+
+        result=stfu_regex.match(line)
+        if (result!=None):
+            self.transport.write('stfu-ing\r\n')
+            self.factory.stfu_var.value=1
+            return
+
         result=song_regex.match(line)
         if (result!=None):
             #queue song

@@ -1,7 +1,7 @@
 # Read username, output from empty factory, drop connections
 import sys
 sys.path.append(r'modules/')
-from multiprocessing import Process, Queue
+from multiprocessing import Process, Queue, Value
 import handler
 
 from twisted.internet import protocol, reactor
@@ -14,7 +14,8 @@ class MBFactory(protocol.ServerFactory):
     def __init__(self):
         self.connections=0
         self.commandq=Queue()
-        self.overwatch=Process(target=handler.handler, args=(self.commandq,))
+        self.stfu_var=Value('i', 0)
+        self.overwatch=Process(target=handler.handler, args=(self.commandq, self.stfu_var,))
         self.overwatch.start()
 
     def addConnection(self):
@@ -22,6 +23,9 @@ class MBFactory(protocol.ServerFactory):
 
     def removeConnection(self):
         self.connection-=1
+
+    def stfu(self):
+        self.stfu_var.value=1
 
     def enq(self):
         #self.commandq.put(command)
