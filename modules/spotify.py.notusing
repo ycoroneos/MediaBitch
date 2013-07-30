@@ -1,0 +1,14 @@
+import spotify
+import os
+
+appkey_dir='~/'
+
+class SpotifyManager(spotify.manager.SpotifySessionManager):
+    appkey_file=os.path.join(os.path.dirname(appkey_dir), 'spotify_appkey.key')
+    def __init__(self, username, password):
+        SpotifySessionManager.__init__(self, username, password)
+
+    def logged_in(self, session, error):
+       print('logged in!\n')
+
+s=SpotifyManager()
