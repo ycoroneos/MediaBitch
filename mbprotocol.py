@@ -41,7 +41,7 @@ class MBProtocol(basic.LineReceiver):
             #queue playlist
             self.transport.write('queuing playlist \r\n')
             command=[[2,x] for x in song.playList(int(line[len(result.group(0)):]), True, False)]
-            self.tranport.write(str(command)+'\r\n')
+            print str(command)+'\r\n'
             self.factory.commandq.put(command)
             return
 
