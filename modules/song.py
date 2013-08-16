@@ -29,4 +29,4 @@ def playList(playlist_id, shuffle, repeat): #the id is an int, others are bool
         random.shuffle(songs, random.random)
     if (repeat==True):
         pass
-    return [i for i in songs.stream.url]
+    return [i.stream.url for i in songs]
