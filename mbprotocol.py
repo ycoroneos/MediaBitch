@@ -40,7 +40,7 @@ class MBProtocol(basic.LineReceiver):
         if (result!=None):
             #queue playlist
             self.transport.write('queuing playlist \r\n')
-            self.factory.commandq.put([[2,x] for x in song.playList(int(result), True, False)])
+            #self.factory.commandq.put([[2,x] for x in song.playList(int(result), True, False)])
             return
 
         result=song_regex.match(line)
