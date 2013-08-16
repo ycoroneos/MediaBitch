@@ -36,6 +36,13 @@ class MBProtocol(basic.LineReceiver):
             self.factory.stfu_var.value=1
             return
 
+        result=playlist_regex.match(line)
+        if (result!=None):
+            #queue playlist
+            self.transport.write('queuing playlist \r\n')
+            self.factory.commandq.put([[2,x] for x in song.playList(int(result), True, False)])
+            return
+
         result=song_regex.match(line)
         if (result!=None):
             #queue song
@@ -49,12 +56,6 @@ class MBProtocol(basic.LineReceiver):
             #queue playlist
             self.transport.write('queuing playlist \r\n')
             self.factory.commandq.put([[2,x] for x in song.playList(int(result), True, False)])
-            return
-
-        result=status_regex.match(line)
-        if (result!=None):
-            #print queue status
-            self.transport.write(str(self.factory.commandq) + '\r\n')
             return
 
         self.transport.write('pattern not found...\r\n')
