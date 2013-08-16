@@ -5,6 +5,7 @@ import song
 #####COMMANDS####
 ### (0, int)    -> volume
 ### (1, string) -> song
+### (2, string) -> grooveshark stream url
 
 
 def handler(commandq, stfu):
@@ -19,6 +20,8 @@ def handler(commandq, stfu):
             elif (command[0]==1):
                 #song
                 current_process=song.playSong(command[1])
+            elif (command[0]==2):
+                current_process=song.playStreamUrl(command[1])
             else:
                 pass
         elif (stfu.value==1 and current_process!=None):

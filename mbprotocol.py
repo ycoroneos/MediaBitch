@@ -9,6 +9,8 @@ import song
 vol_regex=re.compile('mb vol ')
 song_regex=re.compile('mb ')
 stfu_regex=re.compile('mb stfu')
+playlist_regex=re.compile('mb playlist ')
+status_regex=re.compile('mb queue')
 
 class MBProtocol(basic.LineReceiver):
     def connectionMade(self):
@@ -37,9 +39,23 @@ class MBProtocol(basic.LineReceiver):
         result=song_regex.match(line)
         if (result!=None):
             #queue song
-            self.transport.write('changing song \r\n')
+            self.transport.write('queuing song \r\n')
             #song.playSong(line[len(result.group(0)):])
             self.factory.commandq.put([1,line[len(result.group(0)):]])
             return
+
+        result=playlist_regex.match(line)
+        if (result!=None):
+            #queue playlist
+            self.transport.write('queuing playlist \r\n')
+            self.factory.commandq.put([[2,x] for x in song.playList(int(result), True, False)])
+            return
+
+        result=status_regex.match(line)
+        if (result!=None):
+            #print queue status
+            self.transport.write(str(self.factory.commandq) + '\r\n')
+            return
+
         self.transport.write('pattern not found...\r\n')
         return
