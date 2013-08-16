@@ -20,7 +20,7 @@ def playSong(song):
         pass
 
 def playStreamUrl(url):
-    return Popen(["cvlc", "--play-and-exit", result.stream.url])
+    return Popen(["cvlc", "--play-and-exit", url])
 
 def playList(playlist_id, shuffle, repeat): #the id is an int, others are bool
     result=groovclient.playlist(playlist_id)
