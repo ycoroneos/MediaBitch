@@ -44,9 +44,10 @@ class MBProtocol(basic.LineReceiver):
         result=playlist_regex.match(line)
         if (result!=None):
             #queue playlist
-            self.transport.write('queuing playlist \r\n')
-            command=[[2,x] for x in song.playList(int(line[len(result.group(0)):]), True, False)]
-            print str(command)+'\r\n'
+            self.transport.write('queuing playlist and caching songs!\r\n')
+            playlist=song.playList(int(line[len(result.group(0)):]), True, False)
+            self.factory.commandq.put([2,playlist[0]])
+            command=[[[4,cacheStreamUrl(x)] for x in playlist[1:]]]
             for i in command:
                 self.factory.commandq.put(i)
             return
