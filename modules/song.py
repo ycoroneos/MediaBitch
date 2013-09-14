@@ -3,6 +3,7 @@
 from subprocess import call, Popen
 from grooveshark import Client
 import random
+counter=0
 directory='/home/yanni/music/'
 use_spotify=False
 groovclient=Client()
@@ -30,3 +31,13 @@ def playList(playlist_id, shuffle, repeat): #the id is an int, others are bool
     if (repeat==True):
         pass
     return [i.stream.url for i in songs]
+
+def cacheStreamUrl(url):
+    print 'caching song' + url + '\r\n'
+    savename="song"+str(counter)+".ogg"
+    subprocess.call("cvlc", "-vvv "+ url, "--sout file/ogg:"+savename, "--play-and-exit")
+    counter+=1
+    return savename
+
+def playCachedSong(filename):
+    return Popen(["cvlc", "--play-and-exit", filename])

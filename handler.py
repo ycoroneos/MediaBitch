@@ -6,6 +6,8 @@ import song
 ### (0, int)    -> volume
 ### (1, string) -> song
 ### (2, string) -> grooveshark stream url
+### (3, string) -> cache grooveshark song from url
+### (4, string) -> play cached song from file
 
 
 def handler(commandq, stfu):
@@ -21,8 +23,18 @@ def handler(commandq, stfu):
                 #song
                 current_process=song.playSong(command[1])
             elif (command[0]==2):
+                #play a url
                 current_process=song.playStreamUrl(command[1])
+            elif (command[0]==3):
+                #cache a url
+                #this blocks so please don't really use it
+                filename=song.cacheStreamUrl(command[1])
+                commandq.put([4,filename])
+            elif (command[0]==4):
+                current_process=song.playCachedSong(command[1])
             else:
+                #ummmmm idunnodosumthing
+                #antigravity.setLevel(0.1G)
                 pass
         elif (stfu.value==1 and current_process!=None):
             current_process.kill()
