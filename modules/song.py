@@ -33,11 +33,13 @@ def playList(playlist_id, shuffle, repeat): #the id is an int, others are bool
     return [i.stream.url for i in songs]
 
 def cacheStreamUrl(url):
-    print 'caching song' + url + '\r\n'
+    global counter
+    print 'caching song ' + url + '\r\n'
     savename="song"+str(counter)+".ogg"
-    subprocess.call("cvlc", "-vvv "+ url, "--sout file/ogg:"+savename, "--play-and-exit")
+    call(["cvlc", "--play-and-exit", url, "--sout", "file/ogg:"+str(savename)])
     counter+=1
-    return savename
+    return str(savename)
 
 def playCachedSong(filename):
+    print "attempting to play" + filename + " locally\r\n"
     return Popen(["cvlc", "--play-and-exit", filename])

@@ -22,7 +22,7 @@ class MBFactory(protocol.ServerFactory):
         self.connections+=1
 
     def removeConnection(self):
-        self.connection-=1
+        self.connections-=1
 
     def stfu(self):
         self.stfu_var.value=1
