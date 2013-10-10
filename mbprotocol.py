@@ -48,6 +48,7 @@ class MBProtocol(basic.LineReceiver):
             playlist=song.playList(int(line[len(result.group(0)):]), True, False)
             self.factory.commandq.put([2,playlist[0]])
             command=[[4,song.cacheStreamUrl(x)] for x in playlist[1:]]
+            #command=[[3,x] for x in playlist[1:]]
             for i in command:
                 self.factory.commandq.put(i)
             return
