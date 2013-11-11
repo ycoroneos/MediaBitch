@@ -9,7 +9,7 @@ import song
 ### (3, string) -> cache grooveshark song from url
 ### (4, string) -> play cached song from file
 
-
+#This works fairly well now but I anticipate that it will need cleanup in the future
 def handler(commandq, stfu):
     print commandq
     current_process=None
