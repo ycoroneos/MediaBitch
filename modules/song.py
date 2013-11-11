@@ -4,7 +4,7 @@ from subprocess import call, Popen
 from grooveshark import Client
 import random
 counter=0
-directory='/home/yanni/music/'
+directory='/home/yanni/music/' #im not using this but change it to whatever
 use_spotify=False
 groovclient=Client()
 groovclient.init()
