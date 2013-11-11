@@ -29,6 +29,7 @@ def playList(playlist_id, shuffle, repeat): #the id is an int, others are bool
     if (shuffle==True):
         random.shuffle(songs, random.random)
     if (repeat==True):
+        #yeah so I'm not quite sure how to _best_ implement this feature yet
         pass
     return [i.stream.url for i in songs]
 
