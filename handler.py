@@ -1,6 +1,7 @@
 from multiprocessing import Process, Queue
 import volume
 import song
+import signal
 
 #####COMMANDS####
 ### (0, int)    -> volume
@@ -9,8 +10,10 @@ import song
 ### (3, string) -> cache grooveshark song from url
 ### (4, string) -> play cached song from file
 
+
+paused=False
 #This works fairly well now but I anticipate that it will need cleanup in the future
-def handler(commandq, stfu):
+def handler(commandq, stfu, pause):
     print commandq
     current_process=None
     while (1):
@@ -42,5 +45,15 @@ def handler(commandq, stfu):
             stfu.value=0
         elif (stfu.value==1 and current_process==None):
             stfu.value=0
+        elif (pause.value==1 and current_process!=None):
+            if (pause==False):
+                current_process.send_signal(signal.SIGSTOP)
+                pause=True
+            else:
+                current_process.send_signal(signal.SIGCONT)
+                pause=False
+            pause.value=0
+        elif (pause.value==1 and current_process==None):
+            pause.value=0
         else:
             pass

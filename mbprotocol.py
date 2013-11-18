@@ -11,6 +11,7 @@ song_regex=re.compile('mb ')
 stfu_regex=re.compile('mb stfu')
 playlist_regex=re.compile('mb playlist ')
 status_regex=re.compile('mb queue')
+pause_regex=re.compile('mb pup')
 
 class MBProtocol(basic.LineReceiver):
     def connectionMade(self):
@@ -51,6 +52,11 @@ class MBProtocol(basic.LineReceiver):
             #command=[[3,x] for x in playlist[1:]]
             for i in command:
                 self.factory.commandq.put(i)
+            return
+
+        result=pause_regex.match(line)
+        if (result!=None):
+            self.factory.pause_var=not self.factory.pause_var
             return
 
         result=song_regex.match(line)

@@ -15,7 +15,8 @@ class MBFactory(protocol.ServerFactory):
         self.connections=0
         self.commandq=Queue()
         self.stfu_var=Value('i', 0)
-        self.overwatch=Process(target=handler.handler, args=(self.commandq, self.stfu_var,))
+        self.pause_var=Value('i', 0)
+        self.overwatch=Process(target=handler.handler, args=(self.commandq, self.stfu_var, self.pause_var,))
         self.overwatch.start()
 
     def addConnection(self):
