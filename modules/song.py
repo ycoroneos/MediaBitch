@@ -12,10 +12,9 @@ groovclient.init()
 def playSong(song):
     if (use_spotify==False):
         result=groovclient.search(song, Client.SONGS).next()
-        if (result!=None):
-            print result
+        try:
             return Popen(["cvlc", "--play-and-exit", result.stream.url])
-        else:
+        except:
             pass
     else:
         pass
