@@ -8,16 +8,21 @@ from twisted.internet import protocol, reactor
 from twisted.protocols import basic
 import mbprotocol
 
-class MBFactory(protocol.ServerFactory):
-    protocol = mbprotocol.MBProtocol
+#for websockets
+from autobahn.websocket import WebSocketServerFactory, WebSocketServerProtocol, listenWS
+import websocketmbprotocol
 
-    def __init__(self):
-        self.connections=0
-        self.commandq=Queue()
-        self.stfu_var=Value('i', 0)
-        self.pause_var=Value('i', 0)
-        self.overwatch=Process(target=handler.handler, args=(self.commandq, self.stfu_var, self.pause_var,))
-        self.overwatch.start()
+commandq=Queue()
+stfu_var=Value('i', 0)
+pause_var=Value('i', 0)
+overwatch=Process(target=handler.handler, args=(commandq, stfu_var, pause_var,))
+overwatch.start()
+
+class WebSocketMBFactory(WebSocketServerFactory):
+    protocol=websocketmbprotocol.MBProtocol
+
+    def __init__(self, url, debug=False, debugCodepaths=False):
+        WebSocketServerFactory.__init__(self, url)
 
     def addConnection(self):
         self.connections+=1
@@ -26,14 +31,41 @@ class MBFactory(protocol.ServerFactory):
         self.connections-=1
 
     def stfu(self):
-        self.stfu_var.value=1
+        stfu_var.value=1
 
-    def enq(self):
-        #self.commandq.put(command)
-        pass
+    def pup(self):
+        pause_var=not pause_var
+    
+    def enq(self, command):
+        commandq.put(command)
+
+class MBFactory(protocol.ServerFactory):
+    protocol = mbprotocol.MBProtocol
+
+    def __init__(self):
+        self.connections=0
+        '''self.commandq=commandq
+        self.stfu_var=stfu_var
+        self.pause_var=pause_var'''
+
+    def addConnection(self):
+        self.connections+=1
+
+    def removeConnection(self):
+        self.connections-=1
+
+    def stfu(self):
+        stfu_var.value=1
+
+    def pup(self):
+        pause_var=not pause_var
+    
+    def enq(self, command):
+        commandq.put(command)
 
     def showq(self):
-        print self.commandq
+        print commandq
 
-reactor.listenTCP(1308, MBFactory())
+reactor.listenTCP(666, MBFactory())
+listenWS(WebSocketMBFactory("ws://localhost:1308", True, True))
 reactor.run()
